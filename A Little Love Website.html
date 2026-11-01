@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Little Love for Maya</title>
+<style>
+:root {
+  --site-primary: #9e3156;
+  --site-secondary: #f4dce4;
+  --site-background: #fff8f7;
+  --site-on-primary: #ffffff;
+  --site-on-secondary: #592b3b;
+  --site-on-background: #432b34;
+  --site-font-body: "Trebuchet MS", Arial, sans-serif;
+  --site-font-heading: Georgia, "Times New Roman", serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--site-font-body); color: var(--site-on-background); }
+#app {
+  min-height: 100vh;
+  width: 100%;
+  border-radius: 0;
+  background-color: light-dark(#fff8f7, #24171d);
+  background-color: var(--site-background);
+  overflow: hidden;
+  position: relative;
+}
+:root { color-scheme: light dark; }
+.topbar {
+  display:flex; justify-content:space-between; align-items:center;
+  padding: calc(22px * var(--site-spacing-scale)) clamp(20px, 6vw, 80px);
+  border-bottom: 1px solid #e9cbd5;
+  letter-spacing: .12em; text-transform: uppercase; font-size: .75rem;
+}
+.brand { font-family: var(--site-font-heading); font-size: 1.15rem; letter-spacing: .02em; text-transform:none; }
+.topbar a { color:inherit; text-decoration:none; }
+.hero {
+  position:relative; text-align:center; padding: clamp(68px, 12vh, 120px) 22px 76px;
+  background: radial-gradient(ellipse at 50% 0%, #f7dce5 0%, #fff8f7 66%);
+}
+.eyebrow { color:var(--site-primary); text-transform:uppercase; letter-spacing:.24em; font-size:.72rem; font-weight:700; }
+h1 { font-family:var(--site-font-heading); font-weight:400; font-size:clamp(3rem, 8vw, 6.8rem); line-height:1.02; margin:22px auto; max-width:900px; letter-spacing:-.045em; }
+h1 em { color:var(--site-primary); font-weight:400; }
+.subtitle { max-width:520px; margin:0 auto 30px; line-height:1.8; font-size:1.03rem; color:#745561; }
+.heart { color:var(--site-primary); font-size:1.5rem; display:block; margin:22px 0; animation:pulse 2s ease-in-out infinite; }
+@keyframes pulse { 50% { transform:scale(1.14); } }
+.button {
+  border:0; border-radius:999px; padding:14px 24px; background:var(--site-primary);
+  color:var(--site-on-primary); font:inherit; cursor:pointer; transition:transform .2s, opacity .2s;
+}
+.button:hover { transform:translateY(-2px); opacity:.92; }
+.section { padding:68px 22px; max-width:900px; margin:auto; text-align:center; }
+.section h2 { font-family:var(--site-font-heading); font-weight:400; font-size:calc(clamp(2rem, 4vw, 3.5rem) * var(--site-heading-scale)); margin:0 0 16px; }
+.section p { line-height:1.85; color:#765866; }
+.note-card { max-width:680px; margin:28px auto 0; background:#fff; border:1px solid #efd9e0; border-radius:18px; padding:clamp(24px, 5vw, 48px); box-shadow:0 18px 60px #7d33450d; }
+.note-card p { font-family:var(--site-font-heading); font-size:1.2rem; color:#533440; }
+.search-area { background:var(--site-secondary); color:var(--site-on-secondary); padding:65px 22px; text-align:center; }
+.search-area h2 { font-family:var(--site-font-heading); font-size:clamp(2rem, 4vw, 3rem); font-weight:400; margin:0 0 12px; }
+.search-area p { line-height:1.7; max-width:580px; margin:0 auto 24px; }
+.searchbox { display:flex; gap:10px; max-width:620px; margin:0 auto; }
+.searchbox input { min-width:0; flex:1; border:1px solid #d9aebb; border-radius:999px; padding:15px 20px; font:inherit; background:#fff; color:#432b34; outline-offset:3px; }
+.result { max-width:620px; margin:18px auto 0; padding:16px 20px; background:#fff8fb; border-radius:14px; text-align:left; display:none; line-height:1.65; }
+.result a { color:#9e3156; }
+.memories { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:30px; }
+.memory { border:1px solid #efd9e0; border-radius:16px; padding:24px 18px; background:light-dark(#fff, #33242c); }
+.memory span { font-size:1.6rem; }
+.memory h3 { font-family:var(--site-font-heading); font-weight:400; font-size:1.25rem; }
+.memory p { font-size:.93rem; }
+footer { padding:28px 20px; text-align:center; font-size:.85rem; color:#8e6a78; border-top:1px solid #efd9e0; }
+.floating { position:absolute; color:#bd6c88; opacity:var(--site-decoration-opacity); pointer-events:none; font-size:1.2rem; }
+.f1 { top:18%; left:9%; } .f2 { top:28%; right:11%; } .f3 { bottom:12%; left:17%; }
+.opening {
+  position:fixed; inset:0; z-index:10; display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(circle at 50% 42%, #ffe5ee 0%, #f9c9da 52%, #f3b6cd 100%);
+  transition:opacity .8s ease, visibility .8s ease;
+}
+.opening.hidden { opacity:0; visibility:hidden; pointer-events:none; }
+.opening-heart {
+  border:0; background:transparent; color:#c94d79; cursor:pointer; font-size:clamp(8rem, 28vw, 15rem);
+  line-height:1; padding:20px; filter:drop-shadow(0 15px 22px #a73d6530); animation:pulse 1.7s ease-in-out infinite;
+  transition:transform .65s ease, opacity .65s ease;
+}
+.opening-heart:hover { transform:scale(1.1); }
+.opening-heart.unfold { transform:scale(18) rotate(-12deg); opacity:0; }
+.opening-hint { position:absolute; top:calc(50% + 115px); color:#8d3557; font-family:var(--site-font-heading); font-style:italic; font-size:1rem; letter-spacing:.04em; }
+.letter-from { text-align:right; font-family:var(--site-font-heading); font-style:italic; color:#9e3156; }
+@media(max-width:600px) {
+ .topbar { padding:18px 20px; }
+ .searchbox { flex-direction:column; }
+ .searchbox .button { width:100%; }
+ .memories { grid-template-columns:1fr; }
+ .hero { padding-top:70px; }
+}
+</style>
+</head>
+<body>
+<div id="app" data-sites-preview-theme="custom">
+  <div class="opening" id="opening" aria-label="Open the love note">
+    <button class="opening-heart" id="openingHeart" aria-label="Open your love note">♥</button>
+    <div class="opening-hint">tap the heart, bubs ♡</div>
+  </div>
+  <div class="floating f1" aria-hidden="true">✦</div><div class="floating f2" aria-hidden="true">♡</div><div class="floating f3" aria-hidden="true">✧</div>
+  <nav class="topbar"><div class="brand">♡ for Maya, my Bubs</div><a href="#letter">A note for you</a></nav>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">made with a full heart</div>
+      <h1>For Maya, my Bubs,<br>who makes life feel <em>golden.</em></h1>
+      <span class="heart" aria-hidden="true">♥</span>
+      <p class="subtitle">A tiny corner of the internet, made just for you, Bubs — to remind you how special you are to me.</p>
+      <button class="button" onclick="document.getElementById('letter').scrollIntoView({behavior:'smooth'})">Open your little love note ↓</button>
+    </section>
+    <section class="section" id="letter">
+      <div class="eyebrow">just between us</div>
+      <h2>A little note, just for you, Maya</h2>
+      <div class="note-card">
+        <p>Bubs,</p>
+        <p style="font-family:var(--site-font-body);font-size:.95rem;">Maya, you make the little moments matter. Your smile, your laugh, and the way you are completely yourself are some of my favourite things. I hope you always feel loved, valued, and cared for, because you mean so much to me. I'm really lucky to have you in my life, Bubs.</p>
+        <p style="margin-bottom:0;color:#9e3156;">I hope this little note reminds you how loved you are. You make my world a little brighter just by being in it.</p>
+        <p class="letter-from" style="margin-bottom:0;">Love, Quinn ♡</p>
+      </div>
+    </section>
+    <section class="search-area" id="find">
+      <div class="eyebrow">a little adventure</div>
+      <h2>Find a place</h2>
+      <p>Search for a place or address and open it on the map.</p>
+      <form class="searchbox" id="placeForm">
+        <input id="placeInput" aria-label="Search for a place or address" placeholder="Enter a place or address…" autocomplete="street-address" required>
+        <button class="button" type="submit">Search address ↗</button>
+      </form>
+      <div class="result" id="placeResult" role="status" aria-live="polite"></div>
+    </section>
+    <section class="section">
+      <div class="eyebrow">the little things</div>
+      <h2>Things I want more of</h2>
+      <div class="memories">
+        <article class="memory"><span>🌅</span><h3>Golden sunsets</h3><p>Finding a pretty view and staying until the sky changes colour.</p></article>
+        <article class="memory"><span>☕</span><h3>Slow mornings</h3><p>Good conversations, warm drinks, and nowhere else we need to be.</p></article>
+        <article class="memory"><span>✨</span><h3>Our memories</h3><p>Little adventures that turn into stories we keep telling.</p></article>
+      </div>
+    </section>
+  </main>
+  <footer>Made for Maya, my Bubs, with all my love ♡</footer>
+</div>
+<script>
+const form = document.getElementById('placeForm');
+const opening = document.getElementById('opening');
+const openingHeart = document.getElementById('openingHeart');
+openingHeart.addEventListener('click', function() {
+  openingHeart.classList.add('unfold');
+  window.setTimeout(function() {
+    opening.classList.add('hidden');
+    document.getElementById('letter').scrollIntoView({behavior:'smooth'});
+  }, 450);
+});
+form.addEventListener('submit', function(event) {
+  event.preventDefault();
+  const query = document.getElementById('placeInput').value.trim();
+  if (!query) return;
+  const result = document.getElementById('placeResult');
+  const link = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query);
+  result.replaceChildren();
+  const label = document.createElement('strong');
+  label.textContent = 'A little adventure starts here:';
+  const line = document.createElement('div');
+  line.textContent = query;
+  const anchor = document.createElement('a');
+  anchor.href = link;
+  anchor.target = '_blank';
+  anchor.rel = 'noopener noreferrer';
+  anchor.textContent = 'Open this place in Google Maps ↗';
+  anchor.style.display = 'inline-block';
+  anchor.style.marginTop = '8px';
+  result.append(label, line, anchor);
+  result.style.display = 'block';
+});
+</script>
+</body>
+</html>
